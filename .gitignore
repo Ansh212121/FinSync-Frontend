@@ -10,7 +10,7 @@ lerna-debug.log*
 # OS files
 .DS_Store
 Thumbs.db
-
+.env
 # Dependency directories
 node_modules/
 
