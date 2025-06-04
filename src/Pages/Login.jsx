@@ -18,7 +18,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Save user data and token to localStorage
   const saveUserToLocalStorage = (userData, token) => {
     localStorage.setItem('token', token);
     localStorage.setItem('id', userData._id);
@@ -30,7 +29,6 @@ const Login = () => {
     localStorage.setItem('categories', JSON.stringify(categories));
   };
 
-  // Update Redux store with user data
   const updateToAuthSlice = (userData) => {
     const user = {
       _id: userData._id,
@@ -42,7 +40,6 @@ const Login = () => {
       categories: userData.categories || [],
     };
 
-    
     dispatch(setUser(user));
     dispatch(setName(userData.fullName));
     dispatch(setEmail(userData.email));
@@ -52,8 +49,6 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, data);
-      console.log("Login response:", response);
-
       const responseData = response.data;
       const token = responseData.token;
       const userData = responseData.user;
@@ -77,64 +72,70 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-slate-300 p-6 rounded-lg shadow-lg w-full max-w-sm">
-        <h2 className="text-2xl font-semibold text-center mb-4">Log In</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black text-white px-4">
+      <div className="bg-[#1f2937] shadow-2xl rounded-2xl p-8 w-full max-w-md">
+        <h2 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
+          Log In to Your Account
+        </h2>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Email Input */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Email</label>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          {/* Email */}
+          <div>
+            <label className="text-sm font-medium">Email</label>
             <input
               type="email"
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="example@gmail.com"
+              placeholder="you@example.com"
+              className="w-full mt-1 p-2 bg-gray-800 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
               {...register("email", {
                 required: "Email is required",
                 pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address",
+                  value: /^\S+@\S+\.\S+$/,
+                  message: "Invalid email format",
                 },
               })}
             />
-            {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+            {errors.email && (
+              <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>
+            )}
           </div>
 
-          {/* Password Input */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Password</label>
+          {/* Password */}
+          <div>
+            <label className="text-sm font-medium">Password</label>
             <input
               type="password"
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="********"
+              className="w-full mt-1 p-2 bg-gray-800 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
               {...register("password", {
                 required: "Password is required",
-                minLength: { value: 8, message: "Password must be at least 8 characters" },
+                minLength: { value: 8, message: "Minimum 8 characters" },
               })}
             />
-            {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+            {errors.password && (
+              <p className="text-red-400 text-sm mt-1">{errors.password.message}</p>
+            )}
           </div>
 
-          {/* Forgot Password Link */}
-          <div className="mb-4 text-right">
-            <Link to="/forgot-password" className="text-sm text-blue-500 hover:underline">
+          {/* Forgot Password */}
+          <div className="text-right">
+            <Link to="/forgot-password" className="text-sm text-purple-400 hover:underline">
               Forgot Password?
             </Link>
           </div>
 
-          {/* Submit Button */}
+          {/* Submit */}
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white p-2 rounded-md hover:opacity-90 transition disabled:opacity-70"
+            className="w-full py-3 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-md font-medium text-white hover:opacity-90 transition disabled:opacity-60"
           >
             {isSubmitting ? "Logging in..." : "Log In"}
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-600 mt-4">
-          Don't have an account?{" "}
-          <Link to="/signup" className="text-blue-500 hover:underline">
+        <p className="text-sm text-gray-400 mt-6 text-center">
+          Don’t have an account?
+          <Link to="/signup" className="text-purple-400 hover:underline ml-1 font-medium">
             Sign up
           </Link>
         </p>
